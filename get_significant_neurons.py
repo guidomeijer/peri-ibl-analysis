@@ -5,6 +5,7 @@ Created on Tue Jul 16 13:28:32 2024 by Guido Meijer
 
 import numpy as np
 import pandas as pd
+from os.path import join, realpath, dirname
 from one.api import ONE
 import pingouin as pg
 from iblutil.numerical import ismember
@@ -33,8 +34,7 @@ br = BrainRegions()
 insertions = one.alyx.rest('insertions', 'list', atlas_acronym=REGION)
 pids = np.array([i['id'] for i in insertions])
 
-sig_neurons = pd.DataFrame()
-max_time_bin, sig_time_period = [], []
+sig_neurons, sig_time_period = pd.DataFrame(), pd.DataFrame()
 for i, pid in enumerate(pids):
     
     # Get eid and probe name
@@ -146,8 +146,12 @@ for i, pid in enumerate(pids):
             continue
         else:
             object_cell[kk] = 1
-            max_time_bin.append(time_bins[max_bin])
-            sig_time_period.append([np.min(time_bins[object_bin]), np.max(time_bins[object_bin])]) 
+            
+            # Add significant time period to dataframe
+            sig_time_period = pd.concat((sig_time_period, pd.DataFrame(index=[sig_time_period], data={
+                'max_time_bin': time_bins[max_bin],
+                'begin_sig_period': np.min(time_bins[object_bin]),
+                'end_sig_period': np.max(time_bins[object_bin])})))
     
     print(f'{np.sum(object_cell)} of {object_cell.shape[0]} significant neurons '
           f'{np.round((np.sum(object_cell) / object_cell.shape[0]) * 100, decimals=1)}%')
@@ -157,6 +161,9 @@ for i, pid in enumerate(pids):
         'pid': pid, 'n_neurons': object_cell.shape[0], 'sig_neurons': np.sum(object_cell),
         'perc_sig': np.round((np.sum(object_cell) / object_cell.shape[0]) * 100, decimals=1)})))
     
+    # Save to disk
+    sig_time_period.to_csv(join(dirname(realpath(__file__)), 'significant_time_period.csv'), index=False)
+    sig_neurons.to_csv(join(dirname(realpath(__file__)), 'significant_neurons.csv'), index=False)
     
-    
+
     
