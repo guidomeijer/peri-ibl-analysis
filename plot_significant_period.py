@@ -10,7 +10,7 @@ from os.path import join, realpath, dirname
 import matplotlib.pyplot as plt
 
 # Settings
-REGION = 'MOp'
+REGION = 'SSp-bfd'
 
 # Load in results
 sig_time_period = pd.read_csv(join(dirname(realpath(__file__)), f'significant_time_period_{REGION}.csv'))

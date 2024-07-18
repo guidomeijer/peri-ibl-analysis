@@ -14,7 +14,7 @@ from iblatlas.atlas import AllenAtlas, BrainRegions
 from brainbox.population.decode import get_spike_counts_in_bins
 
 # Settings
-REGION = 'PERI'
+REGION = 'SSp-bfd'
 ALPHA = 0.05
 CONS_BIN_CRIT = 5
 MIN_FR = 0.1
