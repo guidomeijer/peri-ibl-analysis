@@ -20,7 +20,8 @@ CONS_BIN_CRIT = 5
 MIN_FR = 0.1
 
 # Bins of 50 ms incremented by 10 ms
-intervals = np.vstack((np.arange(0, 900, 10), np.arange(50, 950, 10))).T  # in ms
+intervals = np.vstack((np.arange(0, 400, 10), np.arange(50, 450, 10))).T  # in ms
+#intervals = np.vstack((np.arange(0, 900, 10), np.arange(50, 950, 10))).T  # in ms
 intervals = intervals / 1000  # in seconds
 time_bins = (intervals[:, 0] + intervals[:, 1]) / 2  # time bin centers
 
@@ -36,6 +37,7 @@ pids = np.array([i['id'] for i in insertions])
 
 sig_neurons, sig_time_period = pd.DataFrame(), pd.DataFrame()
 for i, pid in enumerate(pids):
+    print(f'Starting recording {i+1} of {len(pids)}')
     
     # Get eid and probe name
     eid, probe = one.pid2eid(pid)
@@ -135,7 +137,7 @@ for i, pid in enumerate(pids):
                 object_bin.append(max_bin-i)
             else:
                 break
-        for i in range(max_bin+1,90):
+        for i in range(max_bin+1, time_bins.shape[0]):
             if result[i,0] < ALPHA:
                 object_bin.append(i)
             else:
