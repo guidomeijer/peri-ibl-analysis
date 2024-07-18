@@ -14,7 +14,7 @@ from iblatlas.atlas import AllenAtlas, BrainRegions
 from brainbox.population.decode import get_spike_counts_in_bins
 
 # Settings
-REGION = 'MOp'
+REGION = 'PERI'
 ALPHA = 0.05
 CONS_BIN_CRIT = 5
 MIN_FR = 0.1
@@ -164,8 +164,10 @@ for i, pid in enumerate(pids):
         'perc_sig': np.round((np.sum(object_cell) / object_cell.shape[0]) * 100, decimals=1)})))
     
     # Save to disk
-    sig_time_period.to_csv(join(dirname(realpath(__file__)), 'significant_time_period.csv'), index=False)
-    sig_neurons.to_csv(join(dirname(realpath(__file__)), 'significant_neurons.csv'), index=False)
+    sig_time_period.to_csv(join(dirname(realpath(__file__)), f'significant_time_period_{REGION}.csv'),
+                           index=False)
+    sig_neurons.to_csv(join(dirname(realpath(__file__)), f'significant_neurons_{REGION}.csv'),
+                       index=False)
     
 
     
